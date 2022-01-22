@@ -1,14 +1,15 @@
 <template>
-  <div :class="[className, 'tile']">
+  <div :class="[className, 'tile']" @mousedown="showAvailablePositions">
+  <!-- <div :class="[className, 'tile']"> -->
     <div class="tableIndex">{{value}}</div>
-    <img v-if="piece" :src="piece.pieceImg" class="pieceSvg"/>
-    <!-- <div class="piece">{{piece}}</div> -->
+    <img v-if="piece" :src="piece.pieceImg" class="pieceSvg">
   </div>
 </template>
 
 <script>
 
-import Piece from "@/models/pieces/piece"
+import Field from "@/models/pieces/field"
+// import { mapGetters } from 'vuex';
 
 export default {
   name: 'TableCube',
@@ -18,12 +19,30 @@ export default {
       required: true
     },
     piece: {
-      type: Piece
+      type: Field
     },
     value: {
-
     }
   },
+  computed: {
+    board() {
+      return this.$store.state.table.board;
+    },
+    locationVerifier() {
+      return this.$store.getters['table/getPieceAt'];
+    }
+  },
+  methods: {
+    showAvailablePositions() {
+      console.log(this.piece.availablePositions(this.locationVerifier));
+      if (this.piece.showAvailableMoves) {
+        this.$store.commit('table/clearPlaceholders');
+      } else {
+        this.$store.commit('table/clearPlaceholders');
+        this.$store.commit('table/addPlaceholder', { piece: this.piece, getter: this.locationVerifier });
+      }
+    }
+  }
 }
 </script>
 

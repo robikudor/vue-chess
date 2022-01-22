@@ -1,19 +1,26 @@
 <template>
-  <div class="mainContent">
-    <div v-for="(boardRow, row) in board" :key="row" class="tableRow">
-      <TableCube 
-        v-for="(boardEl, column) in boardRow" 
-        :key="column" 
-        :className="getNextColor()" 
-        :value="`${rowMapper(row)}${columnMapper(column)}`"
-        :piece="board[row][column]"/>
+  <div>
+    <div class="mainContent">
+      <div v-for="(boardRow, row) in board" :key="row" class="tableRow">
+        <TableCube 
+          v-for="(boardEl, column) in boardRow" 
+          :key="column" 
+          :className="getNextColor()" 
+          :value="`${row}${column}`"
+
+          :piece="board[row][column]"/>
+      </div>
+    </div>
+    <div>
+      <button @click="movePawn">Move</button>
     </div>
   </div>
 </template>
 
 <script>
-
+// :value="`${rowMapper(row)}${columnMapper(column)}`"
 import TableCube from '@/components/TableCube.vue';
+import Position from '@/models/position';
 
 export default {
   name: 'Table',
@@ -44,6 +51,13 @@ export default {
     },
     columnMapper(value) {
       return value + 1;
+    },
+    movePawn() {
+      this.$store.commit('table/movePiece',
+      { 
+        oldPosition: new Position({ column: 1, row: 0 }), 
+        newPosition: new Position({ column: 3, row: 0 })
+      })
     }
   }
 } 

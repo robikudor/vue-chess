@@ -1,6 +1,8 @@
 <template>
   <div class="mainContainer">
-    <aside class="leftContent">Left part</aside>
+    <aside class="leftContent">Left part
+      <pre>{{board}}</pre>
+    </aside>
     <div class="mainContent">
       <Table>
       </Table>
@@ -17,7 +19,12 @@ export default {
   name: 'App',
   components: {
     Table
-  }
+  },
+  computed: {
+    board() {
+      return this.$store.state.table.board
+    },
+  },
 }
 </script>
 
