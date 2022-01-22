@@ -1,26 +1,44 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="mainContainer">
+    <aside class="leftContent">Left part</aside>
+    <div class="mainContent">
+      <Table>
+      </Table>
+    </div>
+    <div class="rightContent">History</div>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+
+import Table from '@/components/Table.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Table
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.mainContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between  ;
+}
+
+.leftContent {
+  width: 25%;
+}
+
+.mainContent {
+  width: 680px;
+  height: 680px;
+}
+
+.rightContent {
+  width: 25%;
 }
 </style>
