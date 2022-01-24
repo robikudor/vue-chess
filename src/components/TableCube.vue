@@ -1,7 +1,7 @@
 <template>
   <div :class="[className, 'tile']" @mousedown="showAvailablePositions">
     <div class="tableIndex absolutePos">{{value}}</div>
-    <img v-if="piece" :src="piece.pieceImg" class="full absolutePos">
+    <img v-if="piece.isPiece()" :src="piece.pieceImg" class="full absolutePos">
     <div v-if="piece" :class="[piece.style, 'pieceStyle', 'absolutePos', 'full']"></div>
   </div>
 </template>
@@ -35,7 +35,6 @@ export default {
   methods: {
     showAvailablePositions() {
       if (!this.piece) { return; }
-      console.log(this.piece.availablePositions(this.locationVerifier));
       if (this.piece.showAvailableMoves) {
         this.$store.commit('table/clearPlaceholders');
       } else {

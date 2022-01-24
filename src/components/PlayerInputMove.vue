@@ -33,6 +33,7 @@ export default {
           // highlight selected piece && possible moves
           console.log(piece);
           e.target.value = '';
+          this.showAvailablePositions()
           return;
         }
         console.log('No piece on selected field!')
@@ -45,6 +46,7 @@ export default {
 
         if (!this.movePiece(this.selectedPiece, this.newPosition)) {
           console.log('Can\'t move there!');
+          this.$store.commit('table/clearPlaceholders');
         }
         this.selectedPiece = null;
         this.newPosition = null;
@@ -57,9 +59,19 @@ export default {
           oldPosition: currentPiece.position, 
           newPosition: newPosition
         })
+        this.$store.commit('table/clearPlaceholders');
         return true;
       }
       return false;
+    },
+    showAvailablePositions() {
+      if (!this.selectedPiece) { return; }
+      if (this.selectedPiece.showAvailableMoves) {
+        this.$store.commit('table/clearPlaceholders');
+      } else {
+        this.$store.commit('table/clearPlaceholders');
+        this.$store.commit('table/addPlaceholder', { piece: this.selectedPiece, getter: this.locationVerifier });
+      }
     }
   }
 }
