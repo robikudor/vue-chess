@@ -1,8 +1,8 @@
 <template>
   <div :class="[className, 'tile']" @mousedown="showAvailablePositions">
-  <!-- <div :class="[className, 'tile']"> -->
-    <div class="tableIndex">{{value}}</div>
-    <img v-if="piece" :src="piece.pieceImg" class="pieceSvg">
+    <div class="tableIndex absolutePos">{{value}}</div>
+    <img v-if="piece" :src="piece.pieceImg" class="full absolutePos">
+    <div v-if="piece" :class="[piece.style, 'pieceStyle', 'absolutePos', 'full']"></div>
   </div>
 </template>
 
@@ -47,7 +47,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .white {
     background-color: #EAD2B4;
   }
@@ -59,17 +59,46 @@ export default {
   .tile {
     width: 85px;
     height: 85px;
+    position: relative;
   }
 
-  .pieceSvg {
+  .full {
     width: 100%;
     height: 100%;
   }
 
   .tableIndex {
-    position: relative;
+    position: absolute;
     left: 2px;
     top: 2px;
     height: 0px;
+  }
+
+  .full {
+    width: 100%;
+    height: 100%;
+  }
+
+  .selectedPiece {
+    background-color: green;
+    opacity: 20%;
+  }
+
+  .targetPiece {
+    background-color: red;
+    opacity: 20%;
+  }
+
+  .targetPosition {
+    background-image: url('~@/assets/placeholder.svg');
+  }
+
+  .historyLocation {
+    background-color: yellow;
+    opacity: 20%;
+  }
+
+  .absolutePos {
+    position: absolute;
   }
 </style>
