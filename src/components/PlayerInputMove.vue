@@ -6,20 +6,11 @@
 
 <script>
 import Position from '@/models/position';
+import { gameHandler } from '@/utils/mixins/gameHandlerMixin';
 
 export default {
   name: 'PlayerInputMove',
-  data() {
-    return {
-      selectedPiece: null,
-      newPosition: null
-    }
-  },
-  computed: {
-    locationVerifier() {
-      return this.$store.getters['table/getPieceAt'];
-    }
-  },
+  mixins: [gameHandler],
   methods: {
     handleInputEntered(e) {
       const input = e.target.value;
@@ -30,10 +21,8 @@ export default {
         // add round logic
         if (piece) {
           this.selectedPiece = piece;
-          // highlight selected piece && possible moves
-          console.log(piece);
           e.target.value = '';
-          this.showAvailablePositions()
+          this.showAvailablePositions();
           return;
         }
         console.log('No piece on selected field!')
@@ -52,27 +41,6 @@ export default {
         this.newPosition = null;
       }
     },
-    movePiece(currentPiece, newPosition) {
-      if (currentPiece.canMoveTo(newPosition, this.locationVerifier)) {
-        this.$store.commit('table/movePiece',
-        { 
-          oldPosition: currentPiece.position, 
-          newPosition: newPosition
-        })
-        this.$store.commit('table/clearPlaceholders');
-        return true;
-      }
-      return false;
-    },
-    showAvailablePositions() {
-      if (!this.selectedPiece) { return; }
-      if (this.selectedPiece.showAvailableMoves) {
-        this.$store.commit('table/clearPlaceholders');
-      } else {
-        this.$store.commit('table/clearPlaceholders');
-        this.$store.commit('table/addPlaceholder', { piece: this.selectedPiece, getter: this.locationVerifier });
-      }
-    }
   }
 }
 </script>

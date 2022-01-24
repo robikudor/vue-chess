@@ -51,4 +51,15 @@ export default class King extends Piece {
     }
     return [];
   }
+
+  isChecked(checker, enemyPieces) {
+    let isInCheck = false
+    let self = this;
+    enemyPieces.forEach((piece) => {
+      piece.availablePositions(checker).forEach((position) => {
+        if (position.isEqual(self.position)) { isInCheck = true }
+      })
+    });
+    return isInCheck;
+  }
 }

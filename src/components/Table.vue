@@ -2,15 +2,17 @@
   <div>
     <div class="mainContent">
         <div v-for="(boardRow, row) in board" :key="row" class="tableRow">
-          <TableCube 
-            v-for="(boardEl, column) in boardRow" 
-            :key="column" 
-            :className="getNextColor()" 
+          <TableCube
+            v-for="(boardEl, column) in boardRow"
+            :key="column"
+            :className="getNextColor()"
             :value="`${row}${column}`"
             :piece="board[row][column]"/>
         </div>
     </div>
     <PlayerInputMove/>
+    <button @click="queensideCastle">Queenside</button>
+    <button @click="kingsideCastle">Kingside</button>
   </div>
 </template>
 
@@ -18,10 +20,12 @@
 // :value="`${rowMapper(row)}${columnMapper(column)}`"
 import TableCube from '@/components/TableCube.vue';
 import PlayerInputMove from '@/components/PlayerInputMove.vue';
+import { gameHandler } from '@/utils/mixins/gameHandlerMixin';
 
 export default {
   name: 'Table',
   components: { TableCube, PlayerInputMove },
+  mixins: [gameHandler],
   data() {
     return {
       cubeColor: 'white',
@@ -32,7 +36,7 @@ export default {
   computed: {
     board: {
       get() { return this.$store.state.table.board },
-      set(value) { this.$store.commit('table/movePiece', value) }    
+      set(value) { this.$store.commit('table/movePiece', value) }
     },
   },
   methods: {
@@ -55,7 +59,7 @@ export default {
       console.log(e);
     }
   }
-} 
+}
 </script>
 
 <style>

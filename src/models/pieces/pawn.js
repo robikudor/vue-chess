@@ -15,7 +15,7 @@ export default class Pawn extends Piece {
     const move1 = new Position({ column: column + (1 * this.direction()), row: row })
     if (!checker(move1)) {
       positions.push(move1);
-      if (this.pieceIsInStartingPosition) {
+      if (this.inStartingPosition) {
         const move2 = new Position({ column: column + (2 * this.direction()), row: row })
         if (!checker(move2)) { positions.push(move2); }
       }

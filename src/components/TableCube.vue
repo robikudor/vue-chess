@@ -9,7 +9,7 @@
 <script>
 
 import Field from "@/models/pieces/field"
-// import { mapGetters } from 'vuex';
+import { SELECTED_PIECE } from '@/static/constants'
 
 export default {
   name: 'TableCube',
@@ -40,6 +40,8 @@ export default {
       } else {
         this.$store.commit('table/clearPlaceholders');
         this.$store.commit('table/addPlaceholder', { piece: this.piece, getter: this.locationVerifier });
+          this.$store.commit('table/setPieceStyle',
+            { position: this.piece.position, style: SELECTED_PIECE });
       }
     }
   }

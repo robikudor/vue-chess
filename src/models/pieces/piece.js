@@ -1,12 +1,11 @@
 import Field from '@/models/pieces/field'
-// import _ from 'lodash';
 
 export default class Piece extends Field {
   constructor(color, position) {
     super();
-    this.pieceColor = color; 
+    this.pieceColor = color;
     this.position = position;
-    this.pieceIsInStartingPosition = true;
+    this.inStartingPosition = true;
     this.showAvailableMoves = false;
   }
 
@@ -14,7 +13,6 @@ export default class Piece extends Field {
     return `${this.pieceColor}${this.constructor.name}.svg`
   }
 
-  // eslint-disable-next-line no-unused-vars
   canMoveTo(newPosition, checker) {
     // check if piece is pinned to the king and newPosition is in availablePositions
     if (this.availablePositions(checker)
@@ -29,7 +27,7 @@ export default class Piece extends Field {
   }
 
   updatePieceMoved() {
-    this.pieceIsInStartingPosition = false
+    this.inStartingPosition = false
   }
 
   isBlack() {
