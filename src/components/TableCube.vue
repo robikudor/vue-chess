@@ -34,6 +34,7 @@ export default {
   },
   methods: {
     showAvailablePositions() {
+      if (!this.piece) { return; }
       console.log(this.piece.availablePositions(this.locationVerifier));
       if (this.piece.showAvailableMoves) {
         this.$store.commit('table/clearPlaceholders');

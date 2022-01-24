@@ -1,4 +1,5 @@
 import Field from '@/models/pieces/field'
+// import _ from 'lodash';
 
 export default class Piece extends Field {
   constructor(color, position) {
@@ -14,9 +15,13 @@ export default class Piece extends Field {
   }
 
   // eslint-disable-next-line no-unused-vars
-  canMoveTo(newPosition) {
+  canMoveTo(newPosition, checker) {
     // check if piece is pinned to the king and newPosition is in availablePositions
-    return true
+    if (this.availablePositions(checker)
+            .find(el => el.isEqual(newPosition))) {
+      return true;
+    }
+    return false;
   }
 
   hideAvailableMoves() {

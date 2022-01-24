@@ -48,17 +48,12 @@ export default {
   namespaced: true,
   state: getEmptyState(),
   mutations: {
-    movePiece(state, { oldPosition, newPosition}) {
+    movePiece(state, { oldPosition, newPosition }) {
       const piece = state.board[oldPosition.row][oldPosition.column];
-      if (piece.canMoveTo(newPosition)) {
-        state.board[oldPosition.row][oldPosition.column] = null;
-        state.board[newPosition.row][newPosition.column] = piece;
-        piece.position = newPosition;
-        piece.pieceIsInStartingPosition = false;
-      }
-      else {
-        console.log("can't move there");
-      }
+      state.board[oldPosition.row][oldPosition.column] = null;
+      state.board[newPosition.row][newPosition.column] = piece;
+      piece.position = newPosition;
+      piece.pieceIsInStartingPosition = false;
     },
     addPlaceholder(state, data) {
       const piece = data.piece;
