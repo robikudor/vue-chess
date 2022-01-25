@@ -1,6 +1,7 @@
 <template>
   <div class="mainContainer">
     <aside class="leftContent">Left part
+      <pre>{{game}}</pre>
       <pre>{{board}}</pre>
     </aside>
     <div class="mainContent">
@@ -24,6 +25,9 @@ export default {
     board() {
       return this.$store.state.table.board
     },
+    game() {
+      return this.$store.state.game
+    }
   },
 }
 </script>

@@ -2,20 +2,19 @@ import { SELECTED_PIECE } from '@/static/constants';
 import Position from '../../models/position';
 
 export const gameHandler = {
-  data() {
-    return {
-      selectedPiece: null,
-      newPosition: null,
-      // move this to store
-      playerTurn: {
-        color: 'white'
-      }
-    }
-  },
   computed: {
     locationVerifier() {
       return this.$store.getters['table/getPieceAt'];
     },
+    playerTurnColor() {
+      return this.$store.getters['game/playerTurnColor'];
+    },
+    selectedPiece() {
+      return this.$store.state.game.selectedPiece;
+    },
+    newPosition() {
+      return this.$store.state.game.newPosition;
+    }
   },
   methods: {
     movePiece(currentPiece, newPosition, pieceToPromote) {
@@ -29,12 +28,14 @@ export const gameHandler = {
           oldPosition: currentPiece.position,
           newPosition: newPosition
         });
+        this.$store.commit('game/nextPlayer');
+
         this.$store.commit('table/clearPlaceholders');
         if (currentPiece.isPawn() && newPosition.column == this.lastRank()) {
           this.$store.commit('table/swapPiece',
           {
             position: newPosition,
-            pieceMarkup: `${this.playerTurn.color[0]}${pieceToPromote}${newPosition.row}${newPosition.column}`
+            pieceMarkup: `${this.playerTurnColor[0]}${pieceToPromote}${newPosition.row}${newPosition.column}`
           });
         }
         return true;
@@ -43,7 +44,6 @@ export const gameHandler = {
     },
     showAvailablePositions() {
       if (!this.selectedPiece) { return; }
-      this.checkIfKingIsChecked('black');
       if (this.selectedPiece.showAvailableMoves) {
         this.$store.commit('table/clearPlaceholders');
       } else {
@@ -53,13 +53,12 @@ export const gameHandler = {
           { position: this.selectedPiece.position, style: SELECTED_PIECE });
       }
     },
-    // replace color by playerTurn.color from params
     checkIfKingIsChecked() {
-      console.log({checked: this.getKing(this.playerTurn.color)
+      console.log({checked: this.getKing(this.playerTurnColor)
                     .isChecked(this.locationVerifier, this.getPiecesFor('white'))});
     },
     kingsideCastle() {
-      const king = this.getKing(this.playerTurn.color);
+      const king = this.getKing(this.playerTurnColor);
       const column = king.position.column;
       const rook = this.locationVerifier(new Position({row: 7, column: column}));
       const piece1 = this.locationVerifier(new Position({row: 6, column: column}));
@@ -103,7 +102,7 @@ export const gameHandler = {
       }
     },
     lastRank() {
-      return this.playerTurn.color === 'white' ? 7 : 0;
+      return this.playerTurnColor === 'white' ? 7 : 0;
     },
 
     // getter methods

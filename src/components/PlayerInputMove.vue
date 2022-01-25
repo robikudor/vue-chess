@@ -11,6 +11,11 @@ import { gameHandler } from '@/utils/mixins/gameHandlerMixin';
 export default {
   name: 'PlayerInputMove',
   mixins: [gameHandler],
+  computed: {
+    playerTurnColor() {
+      return this.$store.getters['game/playerTurnColor'];
+    },
+  },
   methods: {
     handleInputEntered(e) {
       const input = e.target.value;
@@ -31,9 +36,8 @@ export default {
 
       if (!this.selectedPiece) {
         const piece = this.locationVerifier(position);
-        // add round logic
-        if (piece) {
-          this.selectedPiece = piece;
+        if (piece && piece.pieceColor === this.playerTurnColor) {
+          this.$store.commit('game/setSelectedPiece', piece);
           e.target.value = '';
           this.showAvailablePositions();
           return;
@@ -43,15 +47,15 @@ export default {
       }
 
       if (!this.newPosition) {
-        this.newPosition = position;
+        this.$store.commit('game/setNewPosition', position);
         e.target.value = '';
 
         if (!this.movePiece(this.selectedPiece, this.newPosition, pieceToPromote)) {
           console.log('Can\'t move there!');
           this.$store.commit('table/clearPlaceholders');
         }
-        this.selectedPiece = null;
-        this.newPosition = null;
+        this.$store.commit('game/setSelectedPiece', null);
+        this.$store.commit('game/setNewPosition', null);
       }
     },
   }

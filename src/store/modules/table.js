@@ -82,6 +82,19 @@ export default {
         })
       });
       return pieces;
+    },
+    getPositionFor: (state) => (piece) => {
+      let rRow, rCol;
+      state.board.find((row) => { row.find((el) => {el === piece})});
+      state.board.forEach((row, i) => {
+        row.forEach((el, j) => {
+          if (el === piece) {
+            rRow = i;
+            rCol = j;
+          }
+        })
+      })
+      return { row: rRow, column: rCol }
     }
   }
 }

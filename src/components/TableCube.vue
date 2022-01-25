@@ -1,5 +1,5 @@
 <template>
-  <div :class="[className, 'tile']" @mousedown="showAvailablePositions">
+  <div :class="[className, 'tile']" @mousedown="handleClick">
     <div class="tableIndex absolutePos">{{value}}</div>
     <img v-if="piece.isPiece()" :src="piece.pieceImg" class="full absolutePos">
     <div v-if="piece" :class="[piece.style, 'pieceStyle', 'absolutePos', 'full']"></div>
@@ -7,9 +7,8 @@
 </template>
 
 <script>
-
+import { gameHandler } from '@/utils/mixins/gameHandlerMixin';
 import Field from "@/models/pieces/field"
-import { SELECTED_PIECE } from '@/static/constants'
 
 export default {
   name: 'TableCube',
@@ -24,25 +23,60 @@ export default {
     value: {
     }
   },
+  mixins: [gameHandler],
   computed: {
     board() {
       return this.$store.state.table.board;
     },
     locationVerifier() {
       return this.$store.getters['table/getPieceAt'];
-    }
+    },
+    playerTurnColor() {
+      return this.$store.getters['game/playerTurnColor'];
+    },
+
   },
   methods: {
-    showAvailablePositions() {
-      if (!this.piece) { return; }
-      if (this.piece.showAvailableMoves) {
-        this.$store.commit('table/clearPlaceholders');
-      } else {
-        this.$store.commit('table/clearPlaceholders');
-        this.$store.commit('table/addPlaceholder', { piece: this.piece, getter: this.locationVerifier });
-          this.$store.commit('table/setPieceStyle',
-            { position: this.piece.position, style: SELECTED_PIECE });
+    handleClick() {
+      if (!this.selectedPiece && !this.piece.isPiece()) {
+        return;
       }
+
+      if (!this.selectedPiece && this.piece.isPiece()) {
+        this.setSelectedPiece();
+        return;
+      }
+
+      if (this.selectedPiece && this.selectedPiece == this.piece) {
+        this.cancelMove();
+        return;
+      }
+
+      if (!this.newPosition && (!this.piece.isPiece() || !this.piece.pieceColor !== this.playerTurnColor)) {
+        this.handleMoveLocation();
+      }
+    },
+    setSelectedPiece() {
+      if (this.piece.pieceColor !== this.playerTurnColor) { return; }
+      this.$store.commit('game/setSelectedPiece', this.piece);
+      this.showAvailablePositions();
+    },
+    cancelMove() {
+      this.$store.commit('game/setSelectedPiece', null);
+      this.$store.commit('table/clearPlaceholders');
+    },
+    handleMoveLocation() {
+      const position = this.getPosition();
+      this.$store.commit('game/setNewPosition', position);
+      if (!this.movePiece(this.selectedPiece, position)) {
+        this.$store.commit('table/clearPlaceholders');
+        console.log('Can\'t move there!');
+      }
+      this.$store.commit('game/setSelectedPiece', null);
+      this.$store.commit('game/setNewPosition', null);
+    },
+    getPosition() {
+      return this.$store.getters['table/getPositionFor'](this.piece);
     }
   }
 }
