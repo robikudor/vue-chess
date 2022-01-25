@@ -11,8 +11,14 @@
         </div>
     </div>
     <PlayerInputMove/>
+    <button @click="startGame">START</button>
     <button @click="queensideCastle">Queenside</button>
     <button @click="kingsideCastle">Kingside</button>
+
+    <div>
+      <input v-model="customGameInput"/>
+      <button @click="customGame">CUSTOM</button>
+    </div>
   </div>
 </template>
 
@@ -26,11 +32,15 @@ export default {
   name: 'Table',
   components: { TableCube, PlayerInputMove },
   mixins: [gameHandler],
+  created() {
+    this.$store.commit('table/setStartingPosition', 'wr00wk40wr70bk47wp26');
+  },
   data() {
     return {
       cubeColor: 'white',
       colorIndex: 0,
       drag: true,
+      customGameInput: 'wr00',
     }
   },
   computed: {
@@ -40,6 +50,12 @@ export default {
     },
   },
   methods: {
+    startGame() {
+      this.$store.commit('table/setStartingPosition');
+    },
+    customGame() {
+      this.$store.commit('table/setStartingPosition', this.customGameInput);
+    },
     getNextColor() {
       this.cubeColor = this.cubeColor === 'white' ? 'black' : 'white'
       if (this.colorIndex === 8) {

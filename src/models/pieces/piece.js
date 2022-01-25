@@ -39,7 +39,11 @@ export default class Piece extends Field {
   }
 
   isPiece() {
-    return true
+    return true;
+  }
+
+  isPawn() {
+    return false;
   }
 
   // eslint-disable-next-line no-unused-vars

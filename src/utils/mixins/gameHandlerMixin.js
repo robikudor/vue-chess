@@ -8,7 +8,7 @@ export const gameHandler = {
       newPosition: null,
       // move this to store
       playerTurn: {
-        color: 'black'
+        color: 'white'
       }
     }
   },
@@ -18,14 +18,25 @@ export const gameHandler = {
     },
   },
   methods: {
-    movePiece(currentPiece, newPosition) {
+    movePiece(currentPiece, newPosition, pieceToPromote) {
+      if (pieceToPromote && !['n', 'b', 'r', 'q'].includes(pieceToPromote)) {
+        console.log('Can\'t promote to this');
+        return false;
+      }
       if (currentPiece.canMoveTo(newPosition, this.locationVerifier)) {
         this.$store.commit('table/movePiece',
         {
           oldPosition: currentPiece.position,
           newPosition: newPosition
-        })
+        });
         this.$store.commit('table/clearPlaceholders');
+        if (currentPiece.isPawn() && newPosition.column == this.lastRank()) {
+          this.$store.commit('table/swapPiece',
+          {
+            position: newPosition,
+            pieceMarkup: `${this.playerTurn.color[0]}${pieceToPromote}${newPosition.row}${newPosition.column}`
+          });
+        }
         return true;
       }
       return false;
@@ -51,9 +62,12 @@ export const gameHandler = {
       const king = this.getKing(this.playerTurn.color);
       const column = king.position.column;
       const rook = this.locationVerifier(new Position({row: 7, column: column}));
+      const piece1 = this.locationVerifier(new Position({row: 6, column: column}));
+      const piece2 = this.locationVerifier(new Position({row: 5, column: column}));
 
-      if (king.inStartingPosition && rook.inStartingPosition
-          // and fields are empty && king not attacked
+      if (king.inStartingPosition && rook && rook.inStartingPosition &&
+          !piece1 && !piece2
+          // enemy attacking any zone? 50 60
         ) {
         this.$store.commit('table/movePiece', {
           oldPosition: rook.position,
@@ -70,9 +84,13 @@ export const gameHandler = {
       const king = this.getKing(this.playerTurn.color);
       const column = king.position.column;
       const rook = this.locationVerifier(new Position({row: 0, column: column}));
+      const piece1 = this.locationVerifier(new Position({row: 3, column: column}));
+      const piece2 = this.locationVerifier(new Position({row: 2, column: column}));
+      const piece3 = this.locationVerifier(new Position({row: 1, column: column}));
 
-      if (king.inStartingPosition && rook.inStartingPosition
-          // and fields are empty && king not attacked
+      if (king.inStartingPosition && rook && rook.inStartingPosition &&
+          !piece1 && !piece2 && !piece3
+          // enemy attacking any zone? 30 20
         ) {
         this.$store.commit('table/movePiece', {
           oldPosition: rook.position,
@@ -83,6 +101,9 @@ export const gameHandler = {
           newPosition: new Position({row: king.position.row - 2, column: column})
         });
       }
+    },
+    lastRank() {
+      return this.playerTurn.color === 'white' ? 7 : 0;
     },
 
     // getter methods

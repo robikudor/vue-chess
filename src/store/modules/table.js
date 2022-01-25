@@ -1,60 +1,38 @@
-// import Piece from "../../models/pieces/piece";
-import Pawn from "../../models/pieces/pawn";
-import Rook from "../../models/pieces/rook";
-import Knight from "../../models/pieces/knight";
-import Queen from "../../models/pieces/queen";
-import King from "../../models/pieces/king";
-import Bishop from "../../models/pieces/bishop";
-import Position from "../../models/position";
-import Placeholder from "../../models/pieces/placeholder";
-// import { HISTORY_LOCATION } from '@/static/constants';
+import Placeholder from "@/models/pieces/placeholder";
+import { buildPiece } from "@/utils/pieceFactory";
 
-const getEmptyState = () => ({
-  board: [
-    [new Rook('white', new Position({ row: 0, column: 0 })), new Placeholder(),
-     new Placeholder(), new Placeholder(), new Placeholder(), new Placeholder(),
-     new Pawn('black', new Position({ row: 0, column: 6 })), new Rook('black', new Position({ row: 0, column: 7 }))],
-
-    [new Knight('white', new Position({ row: 1, column: 0 })), new Pawn('white', new Position({ row: 1, column: 1})),
-     new Placeholder(), new Placeholder(), new Placeholder(), new Placeholder(),
-     new Pawn('black', new Position({ row: 1, column: 6 })), new Knight('black', new Position({ row: 1, column: 7 }))],
-
-    [new Bishop('white', new Position({ row: 2, column: 0 })), new Pawn('white', new Position({row: 2, column: 1})),
-     new Placeholder(), new Placeholder(), new Placeholder(), new Placeholder(),
-     new Pawn('black', new Position({row: 2, column: 6})), new Bishop('black', new Position({row: 2, column: 7}))],
-
-    [new Queen('white', new Position({ row: 3, column: 0 })), new Pawn('white', new Position({row: 3, column: 1})),
-     new Placeholder(), new Placeholder(), new Placeholder(), new Placeholder(),
-     new Pawn('black', new Position({row: 3, column: 6})), new Queen('black', new Position({row: 3, column: 7}))],
-
-    [new King('white', new Position({ row: 4, column: 0 })), new Pawn('white', new Position({row: 4, column: 1})),
-     new Placeholder(), new Placeholder(), new Placeholder(), new Placeholder(),
-     new Pawn('black', new Position({row: 4, column: 6})), new King('black', new Position({row: 4, column: 7}))],
-
-    [new Bishop('white', new Position({ row: 5, column: 0 })), new Pawn('white', new Position({row: 5, column: 1})),
-     new Placeholder(), new Placeholder(), new Placeholder(), new Placeholder(),
-     new Pawn('black', new Position({row: 5, column: 6})), new Bishop('black', new Position({row: 5, column: 7}))],
-
-    [new Knight('white', new Position({ row: 6, column: 0 })), new Pawn('white', new Position({row: 6, column: 1})),
-     new Placeholder(), new Placeholder(), new Placeholder(), new Placeholder(),
-     new Pawn('black', new Position({row: 6, column: 6})), new Knight('black', new Position({row: 6, column: 7}))],
-
-    [new Rook('white', new Position({ row: 7, column: 0 })), new Pawn('white', new Position({row: 7, column: 1})),
-     new Placeholder(), new Placeholder(), new Placeholder(), new Placeholder(),
-     new Pawn('black', new Position({row: 7, column: 6})), new Rook('black', new Position({row: 7, column: 7}))]
-  ]
+const emptyBoard = () => ({
+  board: Array.from({length: 8}, () => Array.from({length: 8}, () => new Placeholder()))
 });
+
+const startingMap = () => {
+  return "wr00wn10wb20wq30wk40wb50wn60wr70" +
+         "wp01wp11wp21wp31wp41wp51wp61wp71" +
+         "bp06bp16bp26bp36bp46bp56bp66bp76" +
+         "br07bn17bb27bq37bk47bb57bn67br77";
+}
 
 export default {
   namespaced: true,
-  state: getEmptyState(),
+  state: emptyBoard(),
   mutations: {
+    setStartingPosition(state, pattern = null) {
+      state.board = emptyBoard().board;
+      pattern ||= startingMap();
+      pattern.match(/.{4}/g).forEach((markup) => {
+        const piece = buildPiece(markup);
+        state.board[piece.position.row][piece.position.column] = piece;
+      })
+    },
     movePiece(state, { oldPosition, newPosition }) {
       const piece = state.board[oldPosition.row][oldPosition.column];
       state.board[oldPosition.row][oldPosition.column] = new Placeholder();
       state.board[newPosition.row][newPosition.column] = piece;
       piece.position = newPosition;
       piece.inStartingPosition = false;
+    },
+    swapPiece(state, { position, pieceMarkup }) {
+      state.board[position.row][position.column] = buildPiece(pieceMarkup);
     },
     addPlaceholder(state, data) {
       const piece = data.piece;
@@ -86,6 +64,7 @@ export default {
       let king = null;
       state.board.forEach((row) => {
         row.forEach((field) => {
+          if (!field.constructor.name === 'Placeholder') { console.log(field) }
           if (field.constructor.name === 'King' && field.pieceColor === color) {
             king = field;
           }

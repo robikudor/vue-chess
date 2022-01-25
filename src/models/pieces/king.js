@@ -52,6 +52,8 @@ export default class King extends Piece {
     return [];
   }
 
+  // Add can castle queen / kingside and add option to availablePositions
+
   isChecked(checker, enemyPieces) {
     let isInCheck = false
     let self = this;

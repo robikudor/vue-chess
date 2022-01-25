@@ -11,7 +11,7 @@ export default class Pawn extends Piece {
     const column = this.position.column;
     const row = this.position.row;
     let positions = [];
-  
+
     const move1 = new Position({ column: column + (1 * this.direction()), row: row })
     if (!checker(move1)) {
       positions.push(move1);
@@ -46,5 +46,9 @@ export default class Pawn extends Piece {
 
   direction() {
     return this.isWhite() ? 1 : -1;
+  }
+
+  isPawn() {
+    return true;
   }
 }
