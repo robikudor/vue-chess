@@ -1,6 +1,6 @@
 <template>
   <div>
-    <input @keyup.enter="handleInputEntered" value='o-o' ref="inputButton"/>
+    <input @keyup.enter="handleInputEntered"/>
   </div>
 </template>
 
@@ -11,17 +11,9 @@ import { gameHandler } from '@/utils/mixins/gameHandlerMixin';
 export default {
   name: 'PlayerInputMove',
   mixins: [gameHandler],
-  created() {
-    this.focusOnEditButton();
-  },
   methods: {
-    focusOnEditButton() {
-      // this.$refs.inputButton.focus();
-    },
     handleInputEntered(e) {
       const input = e.target.value;
-      const pieceToPromote = input[2];
-      const position = new Position({ column: input[1], row: input[0]});
 
       if (input.toLowerCase() === 'o-o') {
         e.target.value = '';
@@ -33,6 +25,9 @@ export default {
         this.queensideCastle();
         return;
       }
+
+      const pieceToPromote = input[2];
+      const position = new Position({ column: input[1], row: input[0]});
 
       if (!this.selectedPiece) {
         const piece = this.locationVerifier(position);

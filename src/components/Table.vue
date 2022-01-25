@@ -33,14 +33,14 @@ export default {
   components: { TableCube, PlayerInputMove },
   mixins: [gameHandler],
   created() {
-    this.$store.commit('table/setStartingPosition', 'wr00wk40wr70bk47wp26');
+    this.$store.commit('table/setStartingPosition');
   },
   data() {
     return {
       cubeColor: 'white',
       colorIndex: 0,
       drag: true,
-      customGameInput: 'wr00',
+      customGameInput: 'wr00wk40wr70bk47wp26',
     }
   },
   computed: {
