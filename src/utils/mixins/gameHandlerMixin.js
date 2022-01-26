@@ -1,4 +1,4 @@
-import { SELECTED_PIECE } from '@/static/constants';
+import { SELECTED_PIECE, TARGET_PIECE } from '@/static/constants';
 import Position from '../../models/position';
 
 export const gameHandler = {
@@ -28,7 +28,6 @@ export const gameHandler = {
           oldPosition: currentPiece.position,
           newPosition: newPosition
         });
-        this.$store.commit('game/nextPlayer');
 
         this.$store.commit('table/clearPlaceholders');
         if (currentPiece.isPawn() && newPosition.column == this.lastRank()) {
@@ -38,6 +37,10 @@ export const gameHandler = {
             pieceMarkup: `${this.playerTurnColor[0]}${pieceToPromote}${newPosition.row}${newPosition.column}`
           });
         }
+
+        this.$store.commit('game/nextPlayer');
+        this.checkIfKingIsChecked();
+
         return true;
       }
       return false;
@@ -54,8 +57,14 @@ export const gameHandler = {
       }
     },
     checkIfKingIsChecked() {
-      console.log({checked: this.getKing(this.playerTurnColor)
-                    .isChecked(this.locationVerifier, this.getPiecesFor('white'))});
+      const king = this.getKing(this.playerTurnColor);
+      const enemyColor = this.$store.getters['game/enemyColor'];
+      console.log({enemyColor});
+      if (king.isChecked(this.locationVerifier, this.getPiecesFor(enemyColor))) {
+        console.log('check');
+        this.$store.commit('table/setPieceStyle',
+          { position: king.position, style: TARGET_PIECE } )  ;
+      }
     },
     kingsideCastle() {
       const king = this.getKing(this.playerTurnColor);

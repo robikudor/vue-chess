@@ -25,6 +25,9 @@ export default {
   getters: {
     playerTurnColor(state) {
       return state.currentPlayerTurn;
+    },
+    enemyColor(state) {
+      return state.currentPlayerTurn === 'white' ? 'black' : 'white';
     }
-  }
+  },
 }
