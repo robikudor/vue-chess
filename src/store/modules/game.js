@@ -2,6 +2,7 @@ const getEmptyState = () => ({
   currentPlayerTurn: 'white',
   selectedPiece: null,
   newPosition: null,
+  kingIsInCheck: false,
   history: [],
 })
 
@@ -20,6 +21,9 @@ export default {
     },
     setNewPosition(state, position) {
       state.newPosition = position;
+    },
+    kingIsInCheck(state, value) {
+      state.kingIsInCheck = value;
     }
    },
   getters: {
@@ -28,6 +32,9 @@ export default {
     },
     enemyColor(state) {
       return state.currentPlayerTurn === 'white' ? 'black' : 'white';
+    },
+    kingIsInCheck(state) {
+      return state.kingIsInCheck;
     }
   },
 }

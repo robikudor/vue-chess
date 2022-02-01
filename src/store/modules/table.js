@@ -34,9 +34,8 @@ export default {
     swapPiece(state, { position, pieceMarkup }) {
       state.board[position.row][position.column] = buildPiece(pieceMarkup);
     },
-    addPlaceholder(state, data) {
-      const piece = data.piece;
-      const locations = piece.availablePositions(data.getter);
+    addPlaceholder(state, piece) {
+      const locations = piece.availableMoves;
       locations.forEach(location => {
         const currentPiece = state.board[location.row][location.column]
         currentPiece.addStyle()
@@ -53,6 +52,16 @@ export default {
     },
     setPieceStyle(state, {position, style}) {
       state.board[position.row][position.column].style = style
+    },
+    // updateAvailablePositions(state, {getter, enemyPieces}) {
+    updateAvailablePositions(state, getter) {
+      state.board.forEach((row) => {
+        row.forEach((piece) => {
+          if (piece.isPiece()) {
+            piece.availableMoves = piece.availablePositions(getter);
+          }
+        })
+      })
     }
   },
   getters: {

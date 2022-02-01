@@ -33,11 +33,14 @@ export default {
     },
     playerTurnColor() {
       return this.$store.getters['game/playerTurnColor'];
-    },
-
+    }
   },
   methods: {
     handleClick() {
+      if (this.isKingChecked()) {
+        return;
+      }
+
       if (!this.selectedPiece && !this.piece.isPiece()) {
         return;
       }
@@ -75,8 +78,12 @@ export default {
       this.$store.commit('game/setSelectedPiece', null);
       this.$store.commit('game/setNewPosition', null);
     },
+
     getPosition() {
       return this.$store.getters['table/getPositionFor'](this.piece);
+    },
+    isKingChecked() {
+      return this.$store.getters['game/kingIsInCheck'];
     }
   }
 }

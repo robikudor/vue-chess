@@ -33,20 +33,24 @@ export default {
   components: { TableCube, PlayerInputMove },
   mixins: [gameHandler],
   created() {
-    this.$store.commit('table/setStartingPosition');
+    this.$store.commit('table/setStartingPosition', this.customGameInput);
+    this.$store.commit('table/updateAvailablePositions', this.locationVerifier);
   },
   data() {
     return {
       cubeColor: 'white',
       colorIndex: 0,
       drag: true,
-      customGameInput: 'wr00wk40wr70bk47wp26',
+      customGameInput: 'wr00wk40wr70bk47wr26',
     }
   },
   computed: {
     board: {
       get() { return this.$store.state.table.board },
       set(value) { this.$store.commit('table/movePiece', value) }
+    },
+    locationVerifier() {
+      return this.$store.getters['table/getPieceAt'];
     },
   },
   methods: {

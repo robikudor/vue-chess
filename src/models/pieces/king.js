@@ -3,7 +3,7 @@ import Position from '@/models/position';
 
 export default class King extends Piece {
   availablePositions(checker) {
-    return [
+    const allPosition = [
       ...this.moveDiagonally(checker, 1, 1),
       ...this.moveDiagonally(checker, 1, -1),
       ...this.moveDiagonally(checker, -1, 1),
@@ -12,7 +12,14 @@ export default class King extends Piece {
       ...this.moveForward(checker, -1, 0),
       ...this.moveForward(checker, 0, 1),
       ...this.moveForward(checker, 0, -1),
-    ];
+    ]
+    // const notAllowedPositions = enemyPieces.map((el) => el.availableMoves).flat();
+    // allPosition.forEach((el, index) => {
+    //   if (notAllowedPositions.find((pos) => { pos.isEqual(el) })) {
+    //     allPosition(index, 0)
+    //   }
+    // })
+    return allPosition;
   }
 
   // Add logic to check if its in check

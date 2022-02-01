@@ -7,6 +7,8 @@ export default class Piece extends Field {
     this.position = position;
     this.inStartingPosition = true;
     this.showAvailableMoves = false;
+    this.availableMoves = [];
+    this.pieceName = this.constructor.name;
   }
 
   get pieceImg() {
@@ -47,5 +49,5 @@ export default class Piece extends Field {
   }
 
   // eslint-disable-next-line no-unused-vars
-  availablePositions(_checker) { [] }
+  availablePositions(_checker, _enemyPieces) { [] }
 }

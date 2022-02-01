@@ -38,6 +38,11 @@ export const gameHandler = {
           });
         }
 
+        // const enemyColor = this.$store.getters['game/enemyColor'];
+        this.$store.commit('table/updateAvailablePositions',
+            this.locationVerifier,
+            // enemyPieces: this.getPiecesFor(enemyColor)
+        );
         this.$store.commit('game/nextPlayer');
         this.checkIfKingIsChecked();
 
@@ -48,22 +53,21 @@ export const gameHandler = {
     showAvailablePositions() {
       if (!this.selectedPiece) { return; }
       if (this.selectedPiece.showAvailableMoves) {
-        this.$store.commit('table/clearPlaceholders');
-      } else {
-        this.$store.commit('table/clearPlaceholders');
-        this.$store.commit('table/addPlaceholder', { piece: this.selectedPiece, getter: this.locationVerifier });
-        this.$store.commit('table/setPieceStyle',
-          { position: this.selectedPiece.position, style: SELECTED_PIECE });
+          this.$store.commit('table/clearPlaceholders');
+        } else {
+          this.$store.commit('table/clearPlaceholders');
+          this.$store.commit('table/addPlaceholder', this.selectedPiece);
+          this.$store.commit('table/setPieceStyle',
+            { position: this.selectedPiece.position, style: SELECTED_PIECE });
       }
     },
     checkIfKingIsChecked() {
       const king = this.getKing(this.playerTurnColor);
       const enemyColor = this.$store.getters['game/enemyColor'];
-      console.log({enemyColor});
       if (king.isChecked(this.locationVerifier, this.getPiecesFor(enemyColor))) {
-        console.log('check');
         this.$store.commit('table/setPieceStyle',
-          { position: king.position, style: TARGET_PIECE } )  ;
+          { position: king.position, style: TARGET_PIECE } );
+        this.$store.commit('game/kingIsInCheck', true);
       }
     },
     kingsideCastle() {
