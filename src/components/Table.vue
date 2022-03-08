@@ -34,7 +34,8 @@ export default {
   mixins: [gameHandler],
   created() {
     this.$store.commit('table/setStartingPosition', this.customGameInput);
-    this.$store.commit('table/updateAvailablePositions', this.locationVerifier);
+    this.$store.commit('table/updateAvailablePositions',
+      { getter: this.locationVerifier });
   },
   data() {
     return {

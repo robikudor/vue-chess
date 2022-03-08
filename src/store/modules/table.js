@@ -24,6 +24,7 @@ export default {
         state.board[piece.position.row][piece.position.column] = piece;
       })
     },
+
     movePiece(state, { oldPosition, newPosition }) {
       const piece = state.board[oldPosition.row][oldPosition.column];
       state.board[oldPosition.row][oldPosition.column] = new Placeholder();
@@ -31,9 +32,11 @@ export default {
       piece.position = newPosition;
       piece.inStartingPosition = false;
     },
+
     swapPiece(state, { position, pieceMarkup }) {
       state.board[position.row][position.column] = buildPiece(pieceMarkup);
     },
+
     addPlaceholder(state, piece) {
       const locations = piece.availableMoves;
       locations.forEach(location => {
@@ -42,6 +45,7 @@ export default {
       });
       piece.showAvailableMoves = true;
     },
+
     clearPlaceholders(state) {
       state.board.forEach(row => {
         row.forEach(field => {
@@ -50,15 +54,17 @@ export default {
         })
       })
     },
-    setPieceStyle(state, {position, style}) {
+
+    setPieceStyle(state, { position, style }) {
       state.board[position.row][position.column].style = style
     },
+
     // updateAvailablePositions(state, {getter, enemyPieces}) {
-    updateAvailablePositions(state, getter) {
+    updateAvailablePositions(state, { getter, enemyPieces }) {
       state.board.forEach((row) => {
         row.forEach((piece) => {
           if (piece.isPiece()) {
-            piece.availableMoves = piece.availablePositions(getter);
+            piece.availableMoves = piece.availablePositions(getter, enemyPieces);
           }
         })
       })

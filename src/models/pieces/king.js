@@ -2,7 +2,8 @@ import Piece from '@/models/pieces/piece'
 import Position from '@/models/position';
 
 export default class King extends Piece {
-  availablePositions(checker) {
+  // eslint-disable-next-line no-unused-vars
+  availablePositions(checker, enemyPieces) {
     const allPosition = [
       ...this.moveDiagonally(checker, 1, 1),
       ...this.moveDiagonally(checker, 1, -1),
@@ -13,6 +14,7 @@ export default class King extends Piece {
       ...this.moveForward(checker, 0, 1),
       ...this.moveForward(checker, 0, -1),
     ]
+
     // const notAllowedPositions = enemyPieces.map((el) => el.availableMoves).flat();
     // allPosition.forEach((el, index) => {
     //   if (notAllowedPositions.find((pos) => { pos.isEqual(el) })) {

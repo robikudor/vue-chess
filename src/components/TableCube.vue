@@ -33,11 +33,17 @@ export default {
     },
     playerTurnColor() {
       return this.$store.getters['game/playerTurnColor'];
-    }
+    },
+    enemyTurnColor() {
+      return this.$store.getters['game/enemyColor'];
+    },
   },
+
   methods: {
     handleClick() {
       if (this.isKingChecked()) {
+        console.log('check');
+        this.setSelectedPiece();
         return;
       }
 
@@ -59,15 +65,19 @@ export default {
         this.handleMoveLocation();
       }
     },
+
     setSelectedPiece() {
       if (this.piece.pieceColor !== this.playerTurnColor) { return; }
+
       this.$store.commit('game/setSelectedPiece', this.piece);
       this.showAvailablePositions();
     },
+
     cancelMove() {
       this.$store.commit('game/setSelectedPiece', null);
       this.$store.commit('table/clearPlaceholders');
     },
+
     handleMoveLocation() {
       const position = this.getPosition();
       this.$store.commit('game/setNewPosition', position);
@@ -82,6 +92,7 @@ export default {
     getPosition() {
       return this.$store.getters['table/getPositionFor'](this.piece);
     },
+
     isKingChecked() {
       return this.$store.getters['game/kingIsInCheck'];
     }

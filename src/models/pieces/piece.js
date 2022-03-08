@@ -1,4 +1,5 @@
 import Field from '@/models/pieces/field'
+import Position from '@/models/position';
 
 export default class Piece extends Field {
   constructor(color, position) {
@@ -46,6 +47,42 @@ export default class Piece extends Field {
 
   isPawn() {
     return false;
+  }
+
+  moveDiagonally(checker, columnDirection, rowDirection, depth = 1) {
+    const newColumn = this.position.column + (columnDirection * depth);
+    const newRow = this.position.row + (rowDirection * depth);
+    const insideOfBoard = newColumn >= 0 && newColumn < 8 && newRow >= 0 && newRow < 8;
+
+    if (insideOfBoard) {
+      const checkPosition = new Position({ column: newColumn, row: newRow });
+      const piece = checker(checkPosition);
+      if (!piece) {
+        return [checkPosition].concat(this.moveDiagonally(checker, columnDirection, rowDirection, depth + 1));
+      }
+      if (piece && piece.pieceColor !== this.pieceColor) {
+        return [checkPosition];
+      }
+    }
+    return [];
+  }
+
+  moveForward(checker, columnDirection, rowDirection, depth = 1) {
+    const newColumn = this.position.column + (columnDirection * depth);
+    const newRow = this.position.row + (rowDirection * depth);
+    const insideOfBoard = newColumn >= 0 && newColumn < 8 && newRow >= 0 && newRow < 8;
+
+    if (insideOfBoard) {
+      const checkPosition = new Position({ column: newColumn, row: newRow });
+      const piece = checker(checkPosition);
+      if (!piece) {
+        return [checkPosition].concat(this.moveForward(checker, columnDirection, rowDirection, depth + 1));
+      }
+      if (piece && piece.pieceColor !== this.pieceColor) {
+        return [checkPosition];
+      }
+    }
+    return [];
   }
 
   // eslint-disable-next-line no-unused-vars

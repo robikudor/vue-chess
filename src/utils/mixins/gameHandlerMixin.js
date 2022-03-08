@@ -16,6 +16,7 @@ export const gameHandler = {
       return this.$store.state.game.newPosition;
     }
   },
+
   methods: {
     movePiece(currentPiece, newPosition, pieceToPromote) {
       if (pieceToPromote && !['n', 'b', 'r', 'q'].includes(pieceToPromote)) {
@@ -40,7 +41,10 @@ export const gameHandler = {
 
         // const enemyColor = this.$store.getters['game/enemyColor'];
         this.$store.commit('table/updateAvailablePositions',
-            this.locationVerifier,
+            {
+              getter: this.locationVerifier,
+              // enemeyPieces: this.$store.getters['table/getPiecesFor'](this.enemyTurnColor())
+            }
             // enemyPieces: this.getPiecesFor(enemyColor)
         );
         this.$store.commit('game/nextPlayer');
@@ -50,6 +54,7 @@ export const gameHandler = {
       }
       return false;
     },
+
     showAvailablePositions() {
       if (!this.selectedPiece) { return; }
       if (this.selectedPiece.showAvailableMoves) {
@@ -61,6 +66,7 @@ export const gameHandler = {
             { position: this.selectedPiece.position, style: SELECTED_PIECE });
       }
     },
+
     checkIfKingIsChecked() {
       const king = this.getKing(this.playerTurnColor);
       const enemyColor = this.$store.getters['game/enemyColor'];
@@ -70,6 +76,7 @@ export const gameHandler = {
         this.$store.commit('game/kingIsInCheck', true);
       }
     },
+
     kingsideCastle() {
       const king = this.getKing(this.playerTurnColor);
       const column = king.position.column;
@@ -92,6 +99,7 @@ export const gameHandler = {
       }
       return false
     },
+
     queensideCastle() {
       const king = this.getKing(this.playerTurn.color);
       const column = king.position.column;
@@ -114,6 +122,7 @@ export const gameHandler = {
         });
       }
     },
+
     lastRank() {
       return this.playerTurnColor === 'white' ? 7 : 0;
     },
@@ -122,6 +131,7 @@ export const gameHandler = {
     getKing(color) {
       return this.$store.getters['table/getKing'](color);
     },
+
     getPiecesFor(color) {
       return this.$store.getters['table/getPiecesFor'](color);
     },
